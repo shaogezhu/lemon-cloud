@@ -6,7 +6,6 @@
 
 ## 目录结构说明
 ```
-
 Lemon-cloud
 ├─lemon-common  --基础工具类
 ├─lemon-gateway  --网关微服务
@@ -57,8 +56,8 @@ Spring Cloud Alibaba|2021.0.1.0
 
 ## 演示地址
 
-PC管理端：http://cms.shaogezhu.com/
-小程序端：暂未开放，可以参考下面运行效果图
+- PC管理端：http://cms.shaogezhu.com
+- 小程序端：暂未开放，可以参考下面运行效果图
 
 
 ## 部署启动
