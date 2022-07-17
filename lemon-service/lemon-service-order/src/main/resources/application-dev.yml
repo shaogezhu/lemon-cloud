@@ -1,0 +1,70 @@
+#####################################################################
+########################    测试环境   ################################
+#####################################################################
+
+
+spring:
+###############   数据源配置   ####################
+  datasource:
+    url: jdbc:mysql://localhost:3306/lemon?characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+
+
+###############   Nacos配置信息   ####################
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
+    ###############   Sentinel配置信息   ##################
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 127.0.0.1:8080
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 控制台打印sql
+###############   feign配置   ####################
+  main:
+    allow-bean-definition-overriding: true
+
+
+###############   Redis配置信息   ####################
+  redis:
+    port: 6379
+    host: 127.0.0.1
+    database: 3
+    password:
+    listen-pattern: __keyevent@3__:expired  #键空间通知
+
+
+###############   Sentinel配置信息   ##################
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 127.0.0.1:8080
+feign:
+  sentinel:
+    enabled: true #Sentinel开启对feign的支持
+
+
+
+##################   自定义配置   ####################
+lemon:
+  order:
+    max-sku-limit: 10000   # 一个订单最大的sku数量
+    pay-time-limit: 3600    # 一个小时支付
+  year-codes: A,B,C,D,E,F   # 订单号首字母
+
+  auth:
+    clientId: order-service
+    secret: 1234
+    includeFilterPaths: # 拦截的路径
+      - /**
+    excludeFilterPaths: # 放行的路径
+      - /test/**

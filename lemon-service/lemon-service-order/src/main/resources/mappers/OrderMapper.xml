@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lemon.order.mapper.OrderMapper">
+
+    <sql id="baseColumn" > id,order_no,user_id,total_price,total_count,create_time,expired_time,placed_time,update_time,snap_img,snap_title,snap_items,snap_address,prepay_id,final_total_price,status </sql>
+
+    <update id="updateStatusByOrderNo">
+        update
+            `order`
+        set
+            status = #{status}
+        where
+            order_no = #{orderNo}
+            and delete_time is null
+    </update>
+    <update id="cancelOrder">
+        update
+            `order`
+        set
+            status = 5
+        where
+            status = 1
+            and id = #{oid}
+            and delete_time is null
+    </update>
+
+    <select id="findOneByUserIdAndId" resultMap="orderDetail">
+        select
+            <include refid="baseColumn"></include>
+        from
+            `order`
+        where
+            id = #{oid}
+            and user_id = #{uid}
+            and delete_time is null
+    </select>
+    <select id="findOneById" resultMap="orderDetail">
+        select
+            <include refid="baseColumn"></include>
+        from
+            `order`
+        where
+            id = #{orderId}
+            and delete_time is null
+    </select>
+    <select id="findFirstByOrderNo" resultMap="orderDetail">
+        select
+            <include refid="baseColumn"></include>
+        from
+            `order`
+        where
+            order_no = #{orderNo}
+            and delete_time is null
+    </select>
+
+
+    <update id="changeOrderStatus">
+        update `order` o set o.status = #{status} where o.id = #{id}
+    </update>
+
+    <select id="searchOrders" resultMap="orderDetail">
+        SELECT o.* FROM `order` o
+        WHERE o.delete_time IS NULL
+        <if test="start != null and end != null">
+            AND o.create_time BETWEEN #{start} AND #{end}
+        </if>
+        <if test="keyword != null">
+            AND o.order_no LIKE #{keyword}
+        </if>
+        ORDER BY o.create_time DESC
+    </select>
+
+    <resultMap id="orderDetail" type="com.lemon.order.pojo.Order" autoMapping="true">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="total_count" property="totalCount"/>
+        <result column="create_time" property="createTime"/>
+        <result column="expired_time" property="expiredTime"/>
+        <result column="placed_time" property="placedTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="snap_img" property="snapImg"/>
+        <result column="snap_title" property="snapTitle"/>
+        <result column="prepay_id" property="prepayId"/>
+        <result column="final_total_price" property="finalTotalPrice"/>
+        <result property="snapItems" jdbcType="VARCHAR" column="snap_items" javaType="ArrayList" typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+        <result property="snapAddress" jdbcType="VARCHAR" column="snap_address" javaType="com.lemon.order.dto.OrderAddressDTO" typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+    </resultMap>
+
+</mapper>

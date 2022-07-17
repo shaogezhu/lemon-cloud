@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lemon.goods.mapper.SkuMapper">
+    <update id="reduceStockBySkuId">
+        update
+            sku
+        set stock = stock-#{count}
+        where id = #{sid} and stock > #{count} and delete_time is NULL
+    </update>
+    <update id="recoverStock">
+        update
+            sku
+        set
+            stock = stock+#{quantity}
+        where
+            id = #{sid}
+            and delete_time is NULL
+    </update>
+
+    <select id="getDetail" resultType="com.lemon.goods.vo.SkuDetailVO">
+        select s.id,
+               s.price,
+               s.discount_price,
+               s.online,
+               s.img,
+               s.title,
+               s.spu_id,
+               s.code,
+               s.stock,
+               s.specs,
+               p.title spu_name
+        from sku s
+                 left join spu p on p.id = s.spu_id
+        where s.id = #{id}
+          and s.delete_time is null
+    </select>
+
+    <sql id="baseColumn"> id, price, discount_price, online, img, title, spu_id, create_time, update_time, delete_time, specs, code, stock, category_id, root_category_id </sql>
+
+    <select id="getSkuBySpuId" resultMap="detailSku">
+        select <include refid="baseColumn"></include> from sku where spu_id = #{id} and delete_time is NULL
+    </select>
+
+    <resultMap id="detailSku" type="com.lemon.goods.pojo.Sku" autoMapping="true">
+        <id property="id" column="id"/>
+        <result property="specs" jdbcType="VARCHAR" column="specs" javaType="ArrayList" typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+    </resultMap>
+
+</mapper>

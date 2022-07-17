@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>lemon-oauth</artifactId>
+        <groupId>com.shaogezhu</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>lemon-service-oauth-api</artifactId>
+    <description>授权实体模块</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.shaogezhu</groupId>
+            <artifactId>lemon-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.talelin</groupId>
+            <artifactId>lin-cms-core</artifactId>
+            <version>0.2.0-RELEASE</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>io.github.talelin</groupId>-->
+<!--            <artifactId>lin-cms-core</artifactId>-->
+<!--            <version>0.2.0-RELEASE</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
+
+
+    </dependencies>
+
+</project>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lemon.goods.mapper.SpuMapper">
+
+    <resultMap id="spuDetailMap" type="com.lemon.goods.pojo.Spu">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="category_id" property="categoryId"/>
+        <collection column="id" property="skuList" javaType="ArrayList" fetchType="lazy" ofType="Sku" select="com.lemon.goods.mapper.SkuMapper.getSkuBySpuId"/>
+        <collection column="id" property="spuImgList" javaType="ArrayList" fetchType="lazy" ofType="SpuImg" select="com.lemon.goods.mapper.SpuMapper.getSpuImgBySpuId"/>
+        <collection column="id" property="spuDetailImgList" javaType="ArrayList" fetchType="lazy" ofType="SpuDetailImg" select="com.lemon.goods.mapper.SpuMapper.getSpuDetailImgBySpuId"/>
+    </resultMap>
+
+    <sql id="baseColumn"> id,title,subtitle,category_id,root_category_id,online,price,sketch_spec_id,default_sku_id,img,discount_price,description,tags,is_test,for_theme_img,spu_theme_img,create_time,update_time,delete_time </sql>
+
+    <select id="getSpuDetailById" resultMap="spuDetailMap">
+        select
+        <include refid="baseColumn"></include>
+        from spu where id = #{id} AND delete_time IS NULL
+    </select>
+
+    <select id="getSpuImgBySpuId" resultType="com.lemon.goods.pojo.SpuImg">
+        select id,img,spu_id from spu_img where spu_id = #{id} AND delete_time IS NULL
+    </select>
+
+    <select id="getSpuDetailImgBySpuId" resultType="com.lemon.goods.pojo.SpuDetailImg">
+        select id,img,spu_id,`index` from spu_detail_img where spu_id = #{id} AND delete_time IS NULL
+    </select>
+
+    <select id="getSpuSimple" resultType="com.lemon.goods.pojo.Spu" >
+        select
+            s.id,s.title,s.subtitle,s.category_id,s.root_category_id,s.online,s.price,s.sketch_spec_id,s.default_sku_id,s.img,s.discount_price,s.description,s.tags,s.is_test,s.for_theme_img,s.spu_theme_img,s.create_time,s.update_time,s.delete_time
+        from
+            spu s
+            inner join theme_spu ts on s.id = ts.spu_id
+            inner join theme t on t.id = ts.theme_id and t.delete_time is null and t.online = 1
+        where
+            ts.theme_id = #{themeId}
+            and s.online = 1
+            and s.delete_time is null
+    </select>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lemon.goods.pojo.Spu">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
+        <result column="title" property="title"/>
+        <result column="subtitle" property="subtitle"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="root_category_id" property="rootCategoryId"/>
+        <result column="online" property="online"/>
+        <result column="price" property="price"/>
+        <result column="sketch_spec_id" property="sketchSpecId"/>
+        <result column="default_sku_id" property="defaultSkuId"/>
+        <result column="img" property="img"/>
+        <result column="discount_price" property="discountPrice"/>
+        <result column="description" property="description"/>
+        <result column="tags" property="tags"/>
+        <result column="is_test" property="isTest"/>
+        <result column="spu_theme_img" property="spuThemeImg"/>
+        <result column="for_theme_img" property="forThemeImg"/>
+    </resultMap>
+
+    <resultMap autoMapping="true" id="DetailResultMap" type="com.lemon.goods.vo.SpuDetailVO">
+        <id column="id" property="id"/>
+        <collection property="spuImgList" ofType="java.lang.String">
+            <constructor>
+                <arg column="spu_img"/>
+            </constructor>
+        </collection>
+        <collection property="spuDetailImgList" ofType="java.lang.String">
+            <constructor>
+                <arg column="detail_img"/>
+            </constructor>
+        </collection>
+    </resultMap>
+
+
+    <select id="getDetail" resultMap="DetailResultMap">
+        SELECT s.*,
+               sku.title AS default_sku_title,
+               sk.name   AS sketch_spec_key_name,
+               si.img    AS spu_img,
+               sdi.img   AS detail_img
+
+        FROM spu s
+                 LEFT OUTER JOIN sku ON sku.id = s.default_sku_id
+                 LEFT OUTER JOIN spec_key sk ON sk.id = s.sketch_spec_id
+                 LEFT OUTER JOIN spu_img si ON si.spu_id = s.id
+                 LEFT OUTER JOIN spu_detail_img sdi ON sdi.spu_id = s.id
+        WHERE s.id = #{id}
+          AND s.delete_time IS NULL
+    </select>
+
+    <select id="getSpecKeys" resultType="java.lang.Long">
+        select s.spec_key_id from spu_key s where s.spu_id = #{id}
+    </select>
+
+
+</mapper>

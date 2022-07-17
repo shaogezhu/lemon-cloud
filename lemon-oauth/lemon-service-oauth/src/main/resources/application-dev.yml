@@ -1,0 +1,74 @@
+#####################################################################
+########################    测试环境   ################################
+#####################################################################
+
+
+spring:
+  ###############   数据源配置   ####################
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/lemon?characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+  ###############   Nacos配置信息   ####################
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+    ###############   Sentinel配置信息   ##################
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
+
+  ###############   feign配置   ####################
+  main:
+    allow-bean-definition-overriding: true
+
+  ###############   Redis配置信息   ####################
+  redis:
+    port: 6379
+    host: 127.0.0.1
+
+feign:
+  sentinel:
+    enabled: true #Sentinel开启对feign的支持
+
+
+##################   自定义配置   ####################
+lemon:
+  security:
+    jwt-key: Lemon123456shaogezhu    #加密盐
+
+  cms:
+    # 开启行为日志记录（logger）
+    logger-enabled: false
+    # access token 过期时间，3600s 一个小时
+    token-access-expire: 3600
+    # refresh token 过期时间，2592000s 一个月
+    token-refresh-expire: 2592000
+    # 令牌 secret
+    token-secret: x88Wf0991079889x8645asAc68f9ecJJU17c5Vbe123od7d8d3e695*4
+
+  auth:
+    clientId: oauth-service
+    secret: 1234
+    includeFilterPaths: # 拦截的路径
+      - /**
+    excludeFilterPaths: # 放行的路径
+      - /test/**
+
+login-captcha:
+  enabled: true #开启登录验证码功能
+  secret: fVP2uBKJUMGSkNBD1ADdhwsGgLQAsAt1
+  iv: BLTwHccumt2dSjQ6
+
+# 微信登录配置
+wx:
+  appid: wxd8************95 #需配置自己的微信小程序appid
+  appsecret: 71****************************64 #配置自己小程序的secret
+  codetosession: https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorzation_code

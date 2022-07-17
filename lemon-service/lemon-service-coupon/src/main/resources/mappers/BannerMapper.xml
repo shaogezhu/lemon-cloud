@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lemon.coupon.mapper.BannerMapper">
+
+    <resultMap id="bannerDetail" type="com.lemon.coupon.pojo.Banner" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection column="id" property="items" javaType="ArrayList" fetchType="lazy" ofType="BannerItem" select="selectItemByBannerId"/>
+    </resultMap>
+
+    <select id="selectOneByName" resultMap="bannerDetail" >
+        select
+            id,name,description,title,img,create_time,update_time
+        from
+            banner
+        where
+            name = #{name}
+            and delete_time is null
+    </select>
+
+    <select id="selectItemByBannerId" resultType="BannerItem">
+        select
+            id,img,keyword,type,create_time,update_time,banner_id,name
+        from
+            banner_item
+        where
+            banner_id = #{id}
+            and delete_time is null
+    </select>
+
+</mapper>

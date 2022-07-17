@@ -1,0 +1,67 @@
+#####################################################################
+########################    测试环境   ################################
+#####################################################################
+
+
+spring:
+###############   数据源配置   ####################
+  datasource:
+    url: jdbc:mysql://localhost:3306/lemon?characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+
+
+###############   Nacos配置信息   ####################
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+
+###############   Sentinel配置信息   ##################
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 127.0.0.1:8080
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 控制台打印sql
+
+##################   自定义配置   ####################
+lemon:
+  ############   文件上传配置   ############
+  file:
+    # 文件服务域名
+    domain: http://127.0.0.1:10010/lemon/
+    # 排除文件类型
+    exclude:
+    # 包括文件类型
+    include:
+      - .jpg
+      - .png
+      - .jpeg
+    # 文件最大数量
+    nums: 10
+    serve-path: assets/**
+    # 单个文件最大体积
+    single-limit: 2MB
+    # 服务器文件路径
+    # 本地文件保存位置
+    store-dir: lemon-service/lemon-service-file/assets/
+
+
+  ############   用户身份验证配置   ############
+  auth:
+    clientId: file-service
+    secret: 1234
+    includeFilterPaths: # 拦截的路径
+      - /**
+    excludeFilterPaths: # 放行的路径
+      - /test/**
+

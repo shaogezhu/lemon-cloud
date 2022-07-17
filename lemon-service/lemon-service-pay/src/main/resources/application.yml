@@ -1,0 +1,14 @@
+server:
+  port: 7040
+
+spring:
+  application:
+    name: payment
+  profiles:
+    active: prod
+  # 设置JSON序列化返回时间戳
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true    #时间以时间戳形式返回
+      FAIL_ON_EMPTY_BEANS: false    # 防止mybatis懒加载出错

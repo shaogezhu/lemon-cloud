@@ -1,0 +1,49 @@
+#####################################################################
+########################    测试环境   ################################
+#####################################################################
+
+
+spring:
+###############   Nacos配置信息   ####################
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+###############   Sentinel配置信息   ##################
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 127.0.0.1:8080
+
+###############   feign配置   ####################
+  main:
+    allow-bean-definition-overriding: true
+
+feign:
+  sentinel:
+    enabled: true #Sentinel开启对feign的支持
+
+
+##################   自定义配置   ####################
+lemon:
+  # 微信回调地址
+  order:
+    pay-callback-host: 127.0.0.1:10010  #url(ip：post)
+    pay-callback-path: /lemon/payment/wx/notify
+
+  auth:
+    clientId: pay-service
+    secret: 1234
+    includeFilterPaths: # 拦截的路径
+      - /**
+    excludeFilterPaths: # 放行的路径
+      - /test/**
+
+##################   微信登录配置   ####################
+wx:
+  appid: wx************95       #AppId
+  appsecret: 71***************************64       #小程序的密钥
+  codetosession: https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorzation_code

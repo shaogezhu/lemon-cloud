@@ -1,0 +1,56 @@
+#####################################################################
+########################    测试环境   ################################
+#####################################################################
+
+
+spring:
+###############   数据源配置   ####################
+  datasource:
+    url: jdbc:mysql://localhost:3306/lemon?characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+  ###############   feign配置   ####################
+  main:
+    allow-bean-definition-overriding: true
+
+
+###############   Nacos配置信息   ####################
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+    ###############   seata配置信息   ##################
+#    alibaba:
+#      seata:
+#        tx-service-group: order_tx_group # 定义事务组的名称
+
+###############   Sentinel配置信息   ##################
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
+
+feign:
+  sentinel:
+    enabled: true #Sentinel开启对feign的支持
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 控制台打印sql
+
+##################   自定义配置   ####################
+lemon:
+  # 六宫格的最大数量
+  grid-category-maximum-quantity: 6
+  auth:
+    clientId: coupon-service
+    secret: 1234
+    includeFilterPaths: # 拦截的路径
+      - /**
+    excludeFilterPaths: # 放行的路径
+      - /test/**

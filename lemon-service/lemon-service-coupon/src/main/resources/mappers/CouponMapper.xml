@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lemon.coupon.mapper.CouponMapper">
+
+
+    <sql id="baseColumn"> c.id,c.title,c.start_time,c.end_time,c.description,c.full_money,c.minus,c.rate,c.type,c.remark,c.whole_store </sql>
+    <select id="getByCategoryId" resultMap="couponDetail">
+        select
+            <include refid="baseColumn"></include>
+        from
+            coupon c
+            inner join coupon_category cc on c.id = cc.coupon_id
+            inner join category ca on cc.category_id = ca.id and ca.delete_time is null and ca.online = 1
+            inner join activity ac on ac.id = c.activity_id
+        where
+            ca.id = #{cid}
+            and ac.start_time &lt; #{now}
+            and ac.end_time &gt; #{now}
+            and c.delete_time is null
+    </select>
+
+    <select id="getWholeStoreCoupons" resultMap="couponDetail">
+        select
+            <include refid="baseColumn"></include>
+        from
+            coupon c
+            inner join activity ac on ac.id = c.activity_id
+        where
+            c.whole_store = #{isWholeStore}
+            and ac.start_time &lt; #{now}
+            and ac.end_time &gt; #{now}
+            and c.delete_time is null
+    </select>
+
+    <select id="findById" resultType="com.lemon.coupon.pojo.Coupon">
+        select
+            <include refid="baseColumn"></include>
+        from
+            coupon c
+        where c.id = #{couponId} and c.delete_time is null
+    </select>
+    <select id="findMyAvailable" resultMap="couponDetail">
+        select
+            <include refid="baseColumn"></include>
+        from
+            coupon c
+            inner join user_coupon uc on uc.coupon_id = c.id
+        where
+            uc.status = 1
+            and uc.order_id is null
+            and uc.user_id = #{uid}
+            and c.start_time &lt; #{now}
+            and c.end_time &gt; #{now}
+            and c.delete_time is null
+    </select>
+
+    <select id="getMyUsedCoupons" resultMap="couponDetail">
+        select
+            <include refid="baseColumn"></include>
+        from
+            coupon c
+            inner join user_coupon uc on uc.coupon_id = c.id
+        where
+            uc.status = 2
+            and uc.order_id is not null
+            and uc.user_id = #{uid}
+            and c.delete_time is null
+    </select>
+
+    <select id="getMyExpiredCoupons" resultMap="couponDetail">
+        select
+            <include refid="baseColumn"></include>
+        from
+            coupon c
+            inner join user_coupon uc on uc.coupon_id = c.id
+        where
+            uc.status != 2
+            and uc.order_id is null
+            and uc.user_id = #{uid}
+            and c.end_time &lt; #{now}
+            and c.delete_time is null
+    </select>
+
+    <select id="findListByActivityId" resultType="com.lemon.coupon.pojo.Coupon">
+        select
+            <include refid="baseColumn"></include>
+        from
+            coupon c
+        where
+            c.activity_id = #{activityId}
+            and start_time &lt; NOW()
+            and end_time &gt; NOW()
+            and c.delete_time is null
+    </select>
+
+    <select id="getCouponsByActivityId" resultType="java.lang.Long">
+        select c.id
+        from coupon c
+        where c.activity_id = #{id}
+        and c.delete_time is null
+    </select>
+
+
+    <resultMap id="couponDetail" type="com.lemon.coupon.pojo.Coupon" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="categoryList" javaType="ArrayList" column="id" ofType="com.lemon.coupon.pojo.Category" fetchType="eager" select="com.lemon.coupon.mapper.CategoryMapper.findCategoryListByCouponId"/>
+    </resultMap>
+
+</mapper>

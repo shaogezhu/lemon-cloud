@@ -1,0 +1,36 @@
+{
+  "groups": [
+    {
+      "name": "lemon.oauth",
+      "type": "com.lemon.oauth.config.ClientProperties",
+      "sourceType": "com.lemon.oauth.config.ClientProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "lemon.oauth.clientId",
+      "type": "java.lang.String",
+      "sourceType": "com.lemon.oauth.config.ClientProperties",
+      "description": "授权客户端的id"
+    },
+    {
+      "name": "lemon.oauth.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.lemon.oauth.config.ClientProperties",
+      "description": "授权客户端的secret"
+    },
+    {
+      "name": "lemon.oauth.includeFilterPaths",
+      "type": "java.lang.String",
+      "sourceType": "com.lemon.oauth.config.ClientProperties",
+      "description": "登录拦截要包含的路径"
+    },
+    {
+      "name": "lemon.oauth.secret",
+      "type": "java.lang.excludeFilterPaths",
+      "sourceType": "com.lemon.oauth.config.ClientProperties",
+      "description": "登录拦截放行的路径"
+    }
+  ],
+  "hints": []
+}

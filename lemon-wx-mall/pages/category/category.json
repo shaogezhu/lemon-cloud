@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "s-sub-category": "/components/sub-category/index"
+  }
+
+}

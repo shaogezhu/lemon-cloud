@@ -1,0 +1,9 @@
+package com.lemon.oauth.dto.log;
+
+/**
+ * @author shaogezhu
+ * @version 1.0.0
+ * @ClassName QueryLogDTO
+ **/
+public class QueryLogDTO {
+}

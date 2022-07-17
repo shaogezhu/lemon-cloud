@@ -1,0 +1,87 @@
+#####################################################################
+########################    测试环境   ################################
+#####################################################################
+spring:
+  cloud:
+    gateway:
+
+
+###############   跨域配置   ####################
+      globalcors:
+        corsConfigurations:
+          '[/**]': # 匹配所有请求
+            allowedOrigins: "*" #跨域处理 允许所有的域
+            allowedMethods: # 支持的方法
+              - GET
+              - POST
+              - PUT
+              - DELETE
+
+
+###############   路由规则配置   ##################
+      routes:
+        #商品微服务
+        - id: lemon_goods_route
+          uri: lb://goods
+          predicates:
+            - Path=/lemon/sale_explain/**,/lemon/goods/**,/lemon/search/**,/lemon/sku/**,/lemon/spu/**,/lemon/theme/**,/lemon/spec-key/**,/lemon/spec-value/**,/lemon/tag/**
+          filters:  # 过滤项
+            - StripPrefix=1 # 去除路由前缀
+        #订单微服务
+        - id: lemon_order_route
+          uri: lb://order
+          predicates:
+            - Path=/lemon/order/**
+          filters:
+            - StripPrefix=1
+        #优惠券微服务
+        - id: lemon_coupon_route
+          uri: lb://coupon
+          predicates:
+            - Path=/lemon/coupon/**,/lemon/activity/**,/lemon/activity-cover/**,/lemon/banner/**,/lemon/banner-item/**,/lemon/category/**,/lemon/grid-category/**,/lemon/user_coupon/**
+          filters:
+            - StripPrefix=1
+        #支付微服务
+        - id: lemon_payment_route
+          uri: lb://payment
+          predicates:
+            - Path=/lemon/payment/**
+          filters:
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}" # 指定一个key生成器
+                redis-rate-limiter.replenishRate: 3 # 生成令牌的速率
+                redis-rate-limiter.burstCapacity: 6 # 桶的容量
+        #授权微服务
+        - id: lemon_oauth_route
+          uri: lb://oauth
+          predicates:
+            - Path=/lemon/token/**,/lemon/cms/**,/lemon/user/**
+          filters:
+            - StripPrefix=1
+        #文件微服务
+        - id: lemon_file_route
+          uri: lb://file
+          predicates:
+            - Path=/lemon/file/**,/lemon/assets/**
+          filters:
+            - StripPrefix=1
+
+
+###############   Nacos配置信息   ####################
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
+###############   Sentinel配置信息   ##################
+    sentinel:
+      transport:
+        port: 8719 #注意这里的端口默认是8719  如果8719被占用的话会自动+1
+        dashboard: localhost:8080
+
+
+###############   Redis配置信息   ####################
+  redis:
+    host: 127.0.0.1
+    port: 6379

@@ -1,0 +1,15 @@
+{
+  "name": "lemon-mall-wx",
+  "version": "1.0.0",
+  "description": "Hello，大家好，我是田埂、本源码属于7七月老师的新Java全栈课第一阶段小程序部分。",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lin-ui": "^0.7.5"
+  }
+}

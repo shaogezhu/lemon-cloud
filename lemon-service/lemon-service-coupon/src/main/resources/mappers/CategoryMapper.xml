@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lemon.coupon.mapper.CategoryMapper">
+    <select id="findCategoryListByActivityId" resultType="com.lemon.coupon.pojo.Category">
+        select
+            c.id,c.name,c.description,c.is_root,c.parent_id,c.img,c.level,c.index
+        from
+            category c
+            inner join activity_category on ac.category_id = c.id
+        where
+            ac.activity_id = #{activityId}
+            and c.online = 1
+            and c.delete_time is null
+    </select>
+    <select id="findCategoryListByCouponId" resultType="com.lemon.coupon.pojo.Category">
+        select
+            c.id,c.name,c.description,c.is_root,c.parent_id,c.img,c.level,c.index
+        from
+            category c
+            inner join coupon_category cc on cc.category_id = c.id
+            inner join coupon co on co.id = cc.coupon_id and co.delete_time is null
+        where
+          cc.coupon_id = #{couponId}
+          and c.online = 1
+          and c.delete_time is null
+    </select>
+
+
+    <resultMap id="categoryDetail" type="com.lemon.coupon.pojo.Category" autoMapping="true">
+        <id column="id" property="id"/>
+        <collection property="couponList" column="id" javaType="ArrayList" fetchType="lazy" ofType="com.lemon.coupon.pojo.Coupon" select="com.lemon.coupon.mapper.CategoryMapper.getByCategoryId"/>
+    </resultMap>
+
+
+
+</mapper>

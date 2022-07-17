@@ -1,0 +1,34 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: file
+  profiles:
+    active: prod
+  # 设置JSON序列化返回时间戳
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true    #时间以时间戳形式返回
+      FAIL_ON_EMPTY_BEANS: false    # 防止mybatis懒加载出错
+
+mybatis-plus:
+  type-aliases-package: com.lemon.*.pojo # 别名扫描包
+  mapper-locations: classpath*:/mappers/*.xml # mapper的xml文件地址
+  global-config:
+    banner: false # 开启/关闭 banner 打印
+    db-config:
+      id-type: auto # 全局主键策略，默认为自增长
+      update-strategy: not_null # 更新时，只更新非null字段
+      insert-strategy: not_null # 新增时，只新增非null字段
+      logic-delete-field: deleteTime # 全局逻辑删除的实体字段名
+      logic-delete-value: now() # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: "null" # 逻辑未删除值(默认为 0)
+  configuration:
+    map-underscore-to-camel-case: true # 开启自动驼峰命名规则映射
+    call-setters-on-nulls: true # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
+    #    lazy-loading-enabled: true #延时加载的开关
+    multiple-result-sets-enabled: true #开启的话，延时加载一个属性时会加载该对象全部属性，否则按需加载属性
+
+
